@@ -6,6 +6,7 @@ import 'package:dropdown_search/src/properties/clear_button_props.dart';
 import 'package:dropdown_search/src/properties/dropdown_button_props.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'src/properties/async_item_props.dart';
 import 'src/properties/dropdown_decorator_props.dart';
@@ -93,7 +94,7 @@ class DropdownSearch<T> extends StatefulWidget {
   final List<T> selectedItems;
 
   ///function that returns item from API
-  final AsyncItemsProps<T, Object>? asyncItems;
+  final DropdownSearchOnFind<T>? asyncItems;
 
   ///called when a new item is selected
   final ValueChanged<T?>? onChanged;
@@ -635,7 +636,7 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
       itemAsString: widget.itemAsString,
       filterFn: widget.filterFn,
       items: widget.items,
-      asyncItems: widget.asyncItems,
+      asyncItems: context.read<AsyncItemsPaginatedProps<T>?>(),
       onChanged: _handleOnChangeSelectedItems,
       compareFn: widget.compareFn,
       isMultiSelectionMode: isMultiSelectionMode,

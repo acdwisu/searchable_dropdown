@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'user_model.dart';
 
@@ -166,60 +167,64 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 children: [
                   Expanded(
-                    child: DropdownSearch<UserModel>(
-                      asyncItems: AsyncItemsBasicProps(
+                    child: Provider(
+                      create: (context) => AsyncItemsBasicProps(
                         fn: (filter) => getData(filter)
                       ),
-                      compareFn: (i, s) => i.isEqual(s),
-                      popupProps: PopupPropsMultiSelection.modalBottomSheet(
-                        isFilterOnline: true,
-                        showSelectedItems: true,
-                        showSearchBox: true,
-                        itemBuilder: _customPopupItemBuilderExample2,
-                        favoriteItemProps: FavoriteItemProps(
-                          showFavoriteItems: true,
-                          favoriteItems: (us) {
-                            return us.where((e) => e.name.contains("Mrs")).toList();
-                          },
+                      child: DropdownSearch<UserModel>(
+                        compareFn: (i, s) => i.isEqual(s),
+                        popupProps: PopupPropsMultiSelection.modalBottomSheet(
+                          isFilterOnline: true,
+                          showSelectedItems: true,
+                          showSearchBox: true,
+                          itemBuilder: _customPopupItemBuilderExample2,
+                          favoriteItemProps: FavoriteItemProps(
+                            showFavoriteItems: true,
+                            favoriteItems: (us) {
+                              return us.where((e) => e.name.contains("Mrs")).toList();
+                            },
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Padding(padding: EdgeInsets.all(4)),
                   Expanded(
-                    child: DropdownSearch<UserModel>.multiSelection(
-                      asyncItems: AsyncItemsBasicProps(
+                    child: Provider(
+                      create: (context) => AsyncItemsBasicProps(
                         fn: (filter) => getData(filter)
                       ),
-                      compareFn: (i, s) => i.isEqual(s),
-                      popupProps: PopupPropsMultiSelection.modalBottomSheet(
-                        showSearchBox: true,
-                        itemBuilder: _customPopupItemBuilderExample2,
-                        favoriteItemProps: FavoriteItemProps(
-                          showFavoriteItems: true,
-                          favoriteItems: (us) {
-                            return us.where((e) => e.name.contains("Mrs")).toList();
-                          },
-                          favoriteItemBuilder: (context, item, isSelected) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.grey[100]),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "${item.name}",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.indigo),
-                                  ),
-                                  Padding(padding: EdgeInsets.only(left: 8)),
-                                  isSelected ? Icon(Icons.check_box_outlined) : SizedBox.shrink(),
-                                ],
-                              ),
-                            );
-                          },
+                      child: DropdownSearch<UserModel>.multiSelection(
+                        compareFn: (i, s) => i.isEqual(s),
+                        popupProps: PopupPropsMultiSelection.modalBottomSheet(
+                          showSearchBox: true,
+                          itemBuilder: _customPopupItemBuilderExample2,
+                          favoriteItemProps: FavoriteItemProps(
+                            showFavoriteItems: true,
+                            favoriteItems: (us) {
+                              return us.where((e) => e.name.contains("Mrs")).toList();
+                            },
+                            favoriteItemBuilder: (context, item, isSelected) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey[100]),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "${item.name}",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.indigo),
+                                    ),
+                                    Padding(padding: EdgeInsets.only(left: 8)),
+                                    isSelected ? Icon(Icons.check_box_outlined) : SizedBox.shrink(),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -388,56 +393,60 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 children: [
                   Expanded(
-                    child: DropdownSearch<UserModel>.multiSelection(
-                      asyncItems: AsyncItemsBasicProps(
+                    child: Provider(
+                      create: (context) => AsyncItemsBasicProps(
                         fn: (filter) => getData(filter)
                       ),
-                      clearButtonProps: ClearButtonProps(isVisible: true),
-                      popupProps: PopupPropsMultiSelection.modalBottomSheet(
-                        showSelectedItems: true,
-                        isFilterOnline: true,
-                        itemBuilder: _customPopupItemBuilderExample2,
-                        showSearchBox: true,
-                        searchFieldProps: TextFieldProps(
-                          controller: _userEditTextController,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.clear),
-                              onPressed: () {
-                                _userEditTextController.clear();
-                              },
+                      child: DropdownSearch<UserModel>.multiSelection(
+                        clearButtonProps: ClearButtonProps(isVisible: true),
+                        popupProps: PopupPropsMultiSelection.modalBottomSheet(
+                          showSelectedItems: true,
+                          isFilterOnline: true,
+                          itemBuilder: _customPopupItemBuilderExample2,
+                          showSearchBox: true,
+                          searchFieldProps: TextFieldProps(
+                            controller: _userEditTextController,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.clear),
+                                onPressed: () {
+                                  _userEditTextController.clear();
+                                },
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      compareFn: (item, selectedItem) => item.id == selectedItem.id,
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: 'Users *',
-                          filled: true,
-                          fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                        compareFn: (item, selectedItem) => item.id == selectedItem.id,
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            labelText: 'Users *',
+                            filled: true,
+                            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                          ),
                         ),
+                        dropdownBuilder: _customDropDownExampleMultiSelection,
                       ),
-                      dropdownBuilder: _customDropDownExampleMultiSelection,
                     ),
                   ),
                   Padding(padding: EdgeInsets.all(4)),
                   Expanded(
-                    child: DropdownSearch<UserModel>(
-                      asyncItems: AsyncItemsBasicProps(
+                    child: Provider(
+                      create: (context) => AsyncItemsBasicProps(
                         fn: (filter) => getData(filter)
                       ),
-                      popupProps: PopupPropsMultiSelection.modalBottomSheet(
-                        showSelectedItems: true,
-                        itemBuilder: _customPopupItemBuilderExample2,
-                        showSearchBox: true,
-                      ),
-                      compareFn: (item, sItem) => item.id == sItem.id,
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: 'User *',
-                          filled: true,
-                          fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                      child: DropdownSearch<UserModel>(
+                        popupProps: PopupPropsMultiSelection.modalBottomSheet(
+                          showSelectedItems: true,
+                          itemBuilder: _customPopupItemBuilderExample2,
+                          showSearchBox: true,
+                        ),
+                        compareFn: (item, sItem) => item.id == sItem.id,
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            labelText: 'User *',
+                            filled: true,
+                            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                          ),
                         ),
                       ),
                     ),
@@ -590,29 +599,31 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Text("[async item paginated example]"),
               Divider(),
-              DropdownSearch<String>(
-                asyncItems: AsyncItemsPaginatedProps(
-                  fn: (filter, page, perPage) {
-                    return _generateItems(
-                      filter: filter,
-                      page: page,
-                      perpage: perPage
-                    );
-                  },
-                  /// example of not work pagination
-                  /// perPage: 2,
-                  perPage: 15,
-                  endOfPageErrorIndication: (e) {
-                    if(e is String) {
-                      return true;
-                    }
+              Provider(
+                create: (context) => AsyncItemsPaginatedProps(
+                    fn: (filter, page, perPage) {
+                      return _generateItems(
+                          filter: filter,
+                          page: page,
+                          perpage: perPage
+                      );
+                    },
+                    /// example of not work pagination
+                    /// perPage: 2,
+                    perPage: 15,
+                    endOfPageErrorIndication: (e) {
+                      if(e is String) {
+                        return true;
+                      }
 
-                    return false;
-                  }
+                      return false;
+                    }
                 ),
-                popupProps: PopupProps.modalBottomSheet(
-                  showSearchBox: true,
-                  isFilterOnline: true,
+                child: DropdownSearch<String>(
+                  popupProps: PopupProps.modalBottomSheet(
+                    showSearchBox: true,
+                    isFilterOnline: true,
+                  ),
                 ),
               ),
             ],
